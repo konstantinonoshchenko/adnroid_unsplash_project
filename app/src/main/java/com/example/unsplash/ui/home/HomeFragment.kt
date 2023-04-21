@@ -107,7 +107,6 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     binding.recycleView.scrollToPosition(0)
-                    binding.topOnTodayText.isVisible = false
                     viewModel.searchPhotos(query, token!!)
                     searchView.clearFocus()
                 }

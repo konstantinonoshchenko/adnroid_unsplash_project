@@ -2,6 +2,7 @@ package com.example.unsplash.ui.home
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -30,15 +31,9 @@ class PhotoAdapter(private val listner: OnItemClickListener) :
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val currentItem = getItem(position)
-        if (position == 0) {
-            val layoutParams =
-                holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
-            layoutParams.isFullSpan = true
-        }
         if (currentItem != null) {
             holder.bind(currentItem)
         }
-
     }
 
     inner class PhotoViewHolder(private val binding: ItemUnsplashPhotoBinding) :
