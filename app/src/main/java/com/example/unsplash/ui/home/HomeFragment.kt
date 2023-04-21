@@ -1,12 +1,14 @@
 package com.example.unsplash.ui.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,7 +20,6 @@ import com.example.unsplash.databinding.FragmentHomeBinding
 import com.example.unsplash.utils.Constants.ID_PHOTO
 import com.example.unsplash.utils.Constants.KEY_TOKEN
 import com.example.unsplash.utils.Constants.TOKEN
-import com.example.unsplash.utils.Constants.URL_PHOTOS
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -38,10 +39,8 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
 
     private val binding get() = _binding!!
 
-    @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.recycleView.layoutManager = layoutManager
         val adapter = PhotoAdapter(this)
@@ -59,7 +58,6 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
             if (token != null) sharedPref.edit().putString(KEY_TOKEN, token).apply()
         }
         if (token != null) {
-            getIntentPhoto()
             viewModel.searchPhotos("", token!!)
             binding.apply {
                 recycleView.setHasFixedSize(true)
@@ -71,6 +69,36 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
                 buttonRetry.setOnClickListener {
                     adapter.retry()
                 }
+                startSearch.setOnClickListener {
+                    searchLayout.isVisible = true
+                    backArrow.isVisible = true
+                    titleUnsplash.isVisible = false
+                    logoUnsplash.isVisible = false
+                    startSearch.isVisible = false
+                    searchLayout.isEndIconVisible = search.text.toString() != ""
+                }
+                backArrow.setOnClickListener {
+                    searchLayout.isVisible = false
+                    backArrow.isVisible = false
+                    titleUnsplash.isVisible = true
+                    logoUnsplash.isVisible = true
+                    startSearch.isVisible = true
+                    viewModel.searchPhotos("", token!!)
+                }
+                searchLayout.setEndIconOnClickListener {
+                    viewModel.searchPhotos(binding.search.text.toString(), token!!)
+                }
+                search.doOnTextChanged { _, _, _, c ->
+                    searchLayout.isEndIconVisible = c >= 3
+                }
+                search.setOnKeyListener { _, keyCode, _ ->
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        if (binding.search.text.toString().length > 3)
+                            viewModel.searchPhotos(binding.search.text.toString(), token!!)
+                        true
+                    } else false
+                }
+
             }
             adapter.addLoadStateListener { loadState ->
                 binding.apply {
@@ -96,30 +124,6 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search, menu)
-
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    binding.recycleView.scrollToPosition(0)
-                    viewModel.searchPhotos(query, token!!)
-                    searchView.clearFocus()
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -141,29 +145,9 @@ class HomeFragment : Fragment(), PhotoAdapter.OnItemClickListener {
             R.id.action_navigation_home_to_detailsFragment,
             args = bundle
         )
-
-
     }
 
     override fun onClickOnLikes(id: String, b: Boolean) {
         viewModel.liked(id, token!!, b)
     }
-    private fun getIntentPhoto() {
-        val intent = activity?.intent
-        val data = intent?.dataString?.split('/')
-        if (data != null) {
-            var dataSplit = data as MutableList
-            val idPhoto = dataSplit.last()
-            dataSplit.removeLast()
-            if (dataSplit.joinToString("/") == URL_PHOTOS) {
-                val bundle = Bundle()
-                bundle.putString(ID_PHOTO, idPhoto)
-                findNavController().navigate(
-                    R.id.action_navigation_home_to_detailsFragment,
-                    args = bundle
-                )
-            }
-        }
-    }
-
 }

@@ -37,4 +37,5 @@
     <string name="titleNotification">Загрузка фотографии</string>
     <string name="doneTextNotification">Фотография загружена</string>
     <string name="falseTextNotification">При загрузке произошла ошибка, попробуй снова</string>
+    <string name="search">Поиск</string>
 </resources>
