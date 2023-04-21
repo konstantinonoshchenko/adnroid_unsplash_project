@@ -22,10 +22,18 @@
 
         <activity
             android:name=".Authorization"
-            android:exported="false"
+            android:exported="true"
             android:noHistory="true"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-            />
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="localhost"
+                    android:scheme="sst" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".OnBoarding"
             android:exported="true"
@@ -53,14 +61,7 @@
                     android:host="unsplash.com"
                     android:pathPrefix="/photos"/>
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="localhost"
-                    android:scheme="sst" />
-            </intent-filter>
+
         </activity>
 
         <provider

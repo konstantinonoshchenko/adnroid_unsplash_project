@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".Authorization">
 
+    <ProgressBar
+        android:id="@+id/progressBarAuthorization"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:elevation="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/fonBlack"
@@ -29,12 +39,11 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/fonBlack"
+        android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="@+id/fonBlack"
         app:layout_constraintEnd_toEndOf="@+id/fonBlack"
         app:layout_constraintStart_toStartOf="@+id/fonBlack"
-        android:src="@drawable/logo"
-        />
+        app:layout_constraintTop_toTopOf="@+id/fonBlack" />
 
     <Button
         android:id="@+id/buttonAuthorization"
@@ -45,8 +54,8 @@
         android:layout_marginEnd="41dp"
         android:text="@string/autorization"
         android:textAllCaps="true"
-        android:textStyle="bold"
         android:textSize="13sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

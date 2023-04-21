@@ -96,7 +96,6 @@ object LaunchSetWorkers {
                 ) { /* ... */
                 }
             }).check()
-
     }
     @SuppressLint("SetTextI18n")
     private fun downloadImage(

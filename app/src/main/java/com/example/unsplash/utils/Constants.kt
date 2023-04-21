@@ -25,6 +25,7 @@ object Constants {
     const val KEY_WORK_RESULT="workResult"
     const val WORK_TAG="WORK_TAG"
     const val CHANNEL_ID="channel01"
+    const val TOKEN="token"
 
 
     const val URL_PHOTOS="https://unsplash.com/photos"
