@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Unsplash" parent="Theme.MaterialComponents.DayNight">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/black</item>
+        <!-- Customize your theme here. -->
+
+        <item name="toolbarStyle">@style/MyToolbar</item>
+    </style>
+
+    <style name="MyToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="titleTextColor">#252525</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="actionMenuTextColor">#252525</item>
+    </style>
+
+    <style name="Theme.Unsplash.Drawable" parent="Theme.Unsplash">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.Unsplash.TextOnBording" parent="Theme.Unsplash">
+    <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.Unsplash.Text" parent="Theme.Unsplash">
+        <item name="android:textColor">@color/white</item>
+        <item name="drawableTint">@color/white</item>
+    </style>
+
+    <style name="Theme.Unsplash.Exit_Constrain" parent="Theme.Unsplash.Text">
+        <item name="android:background">@color/darkGrey</item>
+    </style>
+
+    <style name="Theme.Unsplash.Text_Grey" parent="Theme.Unsplash.Text">
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+</resources>
