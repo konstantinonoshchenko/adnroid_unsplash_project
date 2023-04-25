@@ -30,14 +30,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
+
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
     @Inject
     @ApplicationContext
     lateinit var applicationContext: Context
 
-    //private var photo: Results? = null
     private var idPhoto: String? = null
     private var _binding: PhotoDetailsBinding? = null
     private val binding get() = _binding!!
@@ -62,14 +61,13 @@ class DetailsFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         token = sharedPref!!.getString(KEY_TOKEN, null)
         idPhoto?.let { id -> token?.let { token -> viewModel.getPhoto(id, token) } }
         viewModel.photo.observe(viewLifecycleOwner) { photo ->
             val workRequestCommon by lazy { MyWorker.createWorkRequest(photo.urls!!.raw ?: "") }
             binding.apply {
-                Glide.with(this@DetailsFragment)
+                Glide.with(imageViewDetailsPhoto)
                     .load(photo!!.urls?.regular)
                     .error(R.drawable.ic_error)
                     .listener(object : RequestListener<Drawable> {
@@ -156,8 +154,7 @@ class DetailsFragment : Fragment() {
                 aboutUserPhotoDetails.text =
                     "${requireContext().getString(R.string.about)} @${photo.user?.username ?: ""}"
                 aboutTextUserPhotoDetails.text = photo.user?.bio ?: ""
-                downloadPhotoDetails.text =
-                    "${requireActivity().getString(R.string.download)}(${photo.downloads})"
+                downloadPhotoDetails.text = "${photo.downloads}"
 
                 likesDetailsPhoto.setOnClickListener {
                     if (photo.likedByUser == false) {
@@ -176,8 +173,21 @@ class DetailsFragment : Fragment() {
                                 0, 0, R.drawable.like_border, 0
                             )
                         photo.likes = (photo.likes ?: 1) - 1
-                        binding.likesDetailsPhoto.text = "${photo.likes}"
                     }
+                    binding.likesDetailsPhoto.text = "${photo.likes}"
+                }
+
+                backArrowPhotoDetails.setOnClickListener {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+
+                sharedPhotoDetails.setOnClickListener {
+                    val url = "https://unsplash.com/photos/${idPhoto}"
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.putExtra(EXTRA_TEXT, url)
+                    intent.type = "text/plain"
+                    startActivity(Intent.createChooser(intent, "Share To:"))
                 }
 
                 downloadPhotoDetails.setOnClickListener {
@@ -198,38 +208,10 @@ class DetailsFragment : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "inflater.inflate(R.menu.menu_shared, menu)",
-            "com.example.unsplash.R"
-        )
-    )
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_shared, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        val url = "https://unsplash.com/photos/${idPhoto}"
-        if (id == R.id.shared) {
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-            intent.putExtra(EXTRA_TEXT, url)
-            intent.type = "text/plain"
-            startActivity(Intent.createChooser(intent, "Share To:"))
-        } else {
-            requireActivity().onBackPressed()
-        }
-        return true
-    }
-
     private fun location(location: Location): String {
         val loc = mutableListOf<String>()
         if (location.name != null) loc.add(location.name!!)

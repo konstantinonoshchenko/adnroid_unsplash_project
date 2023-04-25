@@ -66,7 +66,7 @@ object LaunchSetWorkers {
             .withPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-               // Manifest.permission.POST_NOTIFICATIONS,
+                // Manifest.permission.POST_NOTIFICATIONS,
 
             ).withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
@@ -97,15 +97,16 @@ object LaunchSetWorkers {
                 }
             }).check()
     }
+
     @SuppressLint("SetTextI18n")
     private fun downloadImage(
         context: Context,
         url: String,
         fileName: String,
-        uuid: UUID?=null,
-        workRequestCommon: OneTimeWorkRequest?=null,
-        lifecycleOwner: LifecycleOwner?=null,
-        parentView: View?=null,
+        uuid: UUID? = null,
+        workRequestCommon: OneTimeWorkRequest? = null,
+        lifecycleOwner: LifecycleOwner? = null,
+        parentView: View? = null,
         downloadPhotoText: TextView? = null,
         totalDownloads: Int? = null,
     ) {
@@ -120,29 +121,27 @@ object LaunchSetWorkers {
                 val per = it.currentBytes * 100 / it.totalBytes
 
                 if (downloadPhotoText != null) {
-                    downloadPhotoText.text = "${context.getString(R.string.download)} $per %"
+                    downloadPhotoText.text = "$per %"
                 }
             }
             .start(object : OnDownloadListener {
                 override fun onDownloadComplete() {
                     if (downloadPhotoText != null) {
-                        if (totalDownloads == null) downloadPhotoText.text =
-                            context.getString(R.string.download)
+                        if (totalDownloads == null) downloadPhotoText.text = ""
                         else downloadPhotoText.text =
-                            "${context.getString(R.string.download)} (${(totalDownloads) + 1})"
+                            "${(totalDownloads) + 1}"
                         showSnackBar(parentView!!, file, "$fileName.jpg", false)
                     } else {
                         //downloadImageNotification(context,url,"$fileName.jpg")
-                        createNotification(context,file,"$fileName.jpg")
+                        createNotification(context, file, "$fileName.jpg")
                     }
                 }
 
                 override fun onError(error: Error?) {
                     if (downloadPhotoText != null) {
-                        if (totalDownloads == null) downloadPhotoText!!.text =
-                            context.getString(R.string.download)
+                        if (totalDownloads == null) downloadPhotoText!!.text = ""
                         else downloadPhotoText!!.text =
-                            "${context.getString(R.string.download)} (${(totalDownloads) + 1})"
+                            "${(totalDownloads) + 1}"
                         showSnackBar(parentView!!, file, "$fileName.jpg", true)
                         launchWorkers(context, workRequestCommon!!)
                         setWorker(
@@ -153,14 +152,19 @@ object LaunchSetWorkers {
                             fileName
                         )
                     } else {
-                       // downloadImageNotification(context,url,"$fileName.jpg")
-                        createNotification(context, file, fileName,true)
+                        // downloadImageNotification(context,url,"$fileName.jpg")
+                        createNotification(context, file, fileName, true)
                     }
                 }
             })
     }
 
-    private fun createNotification(context: Context,file: File,fileName: String, error: Boolean = false) {
+    private fun createNotification(
+        context: Context,
+        file: File,
+        fileName: String,
+        error: Boolean = false,
+    ) {
         val newFile = File(file, fileName)
         val uri = getUriForFile(
             context,
@@ -171,7 +175,8 @@ object LaunchSetWorkers {
         intent.setDataAndType(uri, "image/*")
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         //val startIntent = startActivity(context, intent, null)
-        val startIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+        val startIntent =
+            PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val source = ImageDecoder.createSource(context.contentResolver, uri)
@@ -252,8 +257,8 @@ object LaunchSetWorkers {
                             fileName,
                         )
                     }
-                }catch (e:Exception){
-                    Log.d("workinfo",e.message.toString())
+                } catch (e: Exception) {
+                    Log.d("workinfo", e.message.toString())
                 }
 
             }
@@ -296,7 +301,8 @@ object LaunchSetWorkers {
         }
         snackBar.show()
     }
-    private fun downloadImageNotification(context:Context,url: String,fileName: String) {
+
+    private fun downloadImageNotification(context: Context, url: String, fileName: String) {
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle("Image Download")
             .setDescription("Downloading")

@@ -83,9 +83,7 @@ class AdapterPhotoLikes(
                 .centerCrop()
                 .into(imageProfileItemWidthFullScreen)
 
-            val download = holder.binding.root.context.getString(R.string.download)
-
-            downloadWidthFullScreen.text =download
+            downloadWidthFullScreen.text =""
 
             if (item.likedByUser == true) {
                 likesWidthFullScreen.setCompoundDrawablesWithIntrinsicBounds(
