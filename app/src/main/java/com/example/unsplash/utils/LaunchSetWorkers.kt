@@ -139,8 +139,8 @@ object LaunchSetWorkers {
 
                 override fun onError(error: Error?) {
                     if (downloadPhotoText != null) {
-                        if (totalDownloads == null) downloadPhotoText!!.text = ""
-                        else downloadPhotoText!!.text =
+                        if (totalDownloads == null) downloadPhotoText.text = ""
+                        else downloadPhotoText.text =
                             "${(totalDownloads) + 1}"
                         showSnackBar(parentView!!, file, "$fileName.jpg", true)
                         launchWorkers(context, workRequestCommon!!)

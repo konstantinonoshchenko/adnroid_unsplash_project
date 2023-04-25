@@ -19,7 +19,7 @@ class UserDetailsViewModel @Inject constructor(
     }
     val user: LiveData<Me> = _user
 
-    val photo = MutableLiveData<List<Results>>(emptyList())
+    val photo = MutableLiveData<List<Results>?>(emptyList())
     val collections= MutableLiveData<List<Collections>?>(emptyList())
 
     fun getInfoMe(token: String) {
@@ -40,7 +40,7 @@ class UserDetailsViewModel @Inject constructor(
     fun getPhoto(username: String, token: String, items: String = "likes") {
         viewModelScope.launch {
             val res = repository.getMeLikes(username, token, items)
-            if (res!=null) photo.value = res!!
+            if (res!=null) photo.value = res
         }
     }
 

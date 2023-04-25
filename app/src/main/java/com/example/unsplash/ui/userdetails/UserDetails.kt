@@ -84,7 +84,6 @@ class UserDetails : Fragment() {
     @SuppressLint("CommitPrefEdits", "ResourceAsColor", "QueryPermissionsNeeded", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
         sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         token = sharedPref!!.getString(KEY_TOKEN, null)
@@ -199,21 +198,12 @@ class UserDetails : Fragment() {
                 confirmation.isVisible = false
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.logaout, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.logUot) {
+        binding.logoutButton.setOnClickListener {
             binding.apply {
                 viewGradient.isVisible = true
                 confirmation.isVisible = true
             }
         }
-        return true
     }
 
     override fun onDestroyView() {
